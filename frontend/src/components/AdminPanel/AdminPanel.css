@@ -1,0 +1,39 @@
+.admin-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-grid h3,
+.admin-lists h3 {
+  margin: 0;
+}
+
+.admin-lists {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.admin-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  padding: 12px 0;
+}
+
+.admin-row:last-child {
+  border-bottom: 0;
+}
+
+@media (max-width: 780px) {
+  .admin-lists {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

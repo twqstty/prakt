@@ -54,6 +54,11 @@ function App() {
   )
 
   const loadData = useCallback(async () => {
+    if (!token) {
+      setData(initialData)
+      return
+    }
+
     setLoading(true)
     setError('')
 
@@ -72,10 +77,10 @@ function App() {
     } finally {
       setLoading(false)
     }
-  }, [apiRequest])
+  }, [apiRequest, token])
 
   useEffect(() => {
-    loadData()
+    queueMicrotask(loadData)
   }, [loadData])
 
   const handleAuthSuccess = (authData) => {
@@ -83,7 +88,7 @@ function App() {
     localStorage.setItem('user', JSON.stringify(authData.user))
     setToken(authData.token)
     setUser(authData.user)
-    setActivePage('clubs')
+    setActivePage('home')
   }
 
   const handleLogout = () => {
@@ -114,6 +119,14 @@ function App() {
     matches: <Matches {...pageProps} />,
     table: <LeagueTable {...pageProps} />,
     admin: <AdminPanel {...pageProps} />,
+  }
+
+  if (!token) {
+    return (
+      <div className="app-shell auth-only-shell">
+        <Auth apiUrl={API_URL} onAuthSuccess={handleAuthSuccess} />
+      </div>
+    )
   }
 
   return (
