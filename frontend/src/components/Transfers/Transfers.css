@@ -1,0 +1,12 @@
+.transfer-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 880px) {
+  .transfer-layout {
+    grid-template-columns: 1fr;
+  }
+}

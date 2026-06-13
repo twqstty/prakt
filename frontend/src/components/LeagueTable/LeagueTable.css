@@ -1,0 +1,9 @@
+.place-cell,
+.points-cell {
+  color: var(--accent-light);
+  font-weight: 950;
+}
+
+.points-cell {
+  font-size: 1.1rem;
+}
