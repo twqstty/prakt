@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String
+  email    String @unique
+  password String
+  role     String @default("USER")
+}
+
+model Club {
+  id              Int        @id @default(autoincrement())
+  name            String
+  city            String
+  budget          Int
+  rating          Int
+  players         Player[]
+  homeMatches     Match[]    @relation("HomeClub")
+  awayMatches     Match[]    @relation("AwayClub")
+  transfersFrom   Transfer[] @relation("FromClub")
+  transfersTo     Transfer[] @relation("ToClub")
+}
+
+model Player {
+  id        Int        @id @default(autoincrement())
+  name      String
+  age       Int
+  position  String
+  rating    Int
+  price     Int
+  clubId    Int?
+  club      Club?      @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  transfers Transfer[]
+}
+
+model Match {
+  id         Int      @id @default(autoincrement())
+  homeClubId Int
+  awayClubId Int
+  homeScore  Int
+  awayScore  Int
+  matchDate  DateTime
+  homeClub   Club     @relation("HomeClub", fields: [homeClubId], references: [id], onDelete: Cascade)
+  awayClub   Club     @relation("AwayClub", fields: [awayClubId], references: [id], onDelete: Cascade)
+}
+
+model Transfer {
+  id           Int      @id @default(autoincrement())
+  playerId     Int
+  fromClubId   Int?
+  toClubId     Int
+  price        Int
+  transferDate DateTime @default(now())
+  player       Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  fromClub     Club?    @relation("FromClub", fields: [fromClubId], references: [id], onDelete: SetNull)
+  toClub       Club     @relation("ToClub", fields: [toClubId], references: [id], onDelete: Cascade)
+}
