@@ -1,0 +1,33 @@
+.club-select-panel {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+}
+
+.my-club-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.my-club-stats .card {
+  display: grid;
+  gap: 8px;
+}
+
+.my-club-stats span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.my-club-stats strong {
+  color: var(--accent-light);
+  font-size: 1.45rem;
+}
+
+@media (max-width: 680px) {
+  .club-select-panel {
+    grid-template-columns: 1fr;
+  }
+}

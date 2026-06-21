@@ -7,15 +7,25 @@ const money = new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0,
 })
 
-function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthenticated }) {
-  const [form, setForm] = useState({ playerId: '', toClubId: '', price: '' })
+function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthenticated, user }) {
+  const [form, setForm] = useState({ playerId: '', toClubId: user?.clubId || '', price: '' })
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
   const handleChange = (event) => {
-    setForm((current) => ({ ...current, [event.target.name]: event.target.value }))
+    const { name, value } = event.target
+    setForm((current) => {
+      if (name === 'playerId') {
+        const player = players.find((item) => item.id === Number(value))
+        return { ...current, playerId: value, price: player?.price || '' }
+      }
+
+      return { ...current, [name]: value }
+    })
   }
+
+  const selectedClub = clubs.find((club) => club.id === Number(form.toClubId))
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -24,6 +34,11 @@ function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthen
 
     if (!isAuthenticated) {
       setError('Оформление трансферов доступно только авторизованным клубам.')
+      return
+    }
+
+    if (selectedClub && Number(form.price) > selectedClub.budget) {
+      setError('Бюджета клуба недостаточно для этой сделки.')
       return
     }
 
@@ -63,7 +78,9 @@ function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthen
             Игрок
             <select name="playerId" value={form.playerId} onChange={handleChange} required>
               <option value="">Игрок трансфера</option>
-              {players.map((player) => (
+              {players
+                .filter((player) => player.clubId !== Number(form.toClubId))
+                .map((player) => (
                 <option key={player.id} value={player.id}>
                   {player.name} - {player.club?.name || 'Свободный агент'}
                 </option>
@@ -93,6 +110,12 @@ function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthen
               required
             />
           </label>
+          {selectedClub && (
+            <div className="transfer-budget">
+              <span>Бюджет покупателя</span>
+              <strong>{money.format(selectedClub.budget)}</strong>
+            </div>
+          )}
           {message && <div className="alert alert-success">{message}</div>}
           {error && <div className="alert alert-error">{error}</div>}
           <button type="submit" disabled={submitting}>

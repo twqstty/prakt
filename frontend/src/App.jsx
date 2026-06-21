@@ -9,8 +9,9 @@ import Matches from './components/Matches/Matches'
 import LeagueTable from './components/LeagueTable/LeagueTable'
 import Auth from './components/Auth/Auth'
 import AdminPanel from './components/AdminPanel/AdminPanel'
+import MyClub from './components/MyClub/MyClub'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001'
 
 const initialData = {
   clubs: [],
@@ -63,7 +64,8 @@ function App() {
     setError('')
 
     try {
-      const [clubs, players, matches, transfers, leagueTable] = await Promise.all([
+      const [profile, clubs, players, matches, transfers, leagueTable] = await Promise.all([
+        apiRequest('/api/auth/me'),
         apiRequest('/api/clubs'),
         apiRequest('/api/players'),
         apiRequest('/api/matches'),
@@ -71,6 +73,8 @@ function App() {
         apiRequest('/api/league-table'),
       ])
 
+      localStorage.setItem('user', JSON.stringify(profile))
+      setUser(profile)
       setData({ clubs, players, matches, transfers, leagueTable })
     } catch (requestError) {
       setError(requestError.message)
@@ -99,20 +103,27 @@ function App() {
     setActivePage('home')
   }
 
+  const handleUserUpdate = useCallback((updatedUser) => {
+    localStorage.setItem('user', JSON.stringify(updatedUser))
+    setUser(updatedUser)
+  }, [])
+
   const pageProps = useMemo(
     () => ({
       ...data,
       apiRequest,
       reloadData: loadData,
       isAuthenticated: Boolean(token),
+      onUserUpdate: handleUserUpdate,
       user,
     }),
-    [apiRequest, data, loadData, token, user],
+    [apiRequest, data, handleUserUpdate, loadData, token, user],
   )
 
   const pages = {
     home: <Home clubs={data.clubs} players={data.players} matches={data.matches} />,
     auth: <Auth apiUrl={API_URL} onAuthSuccess={handleAuthSuccess} />,
+    myClub: <MyClub {...pageProps} />,
     clubs: <Clubs {...pageProps} />,
     players: <Players {...pageProps} />,
     transfers: <Transfers {...pageProps} />,

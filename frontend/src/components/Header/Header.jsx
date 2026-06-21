@@ -2,6 +2,7 @@ import './Header.css'
 
 const navItems = [
   { id: 'home', label: 'Главная' },
+  { id: 'myClub', label: 'Мой клуб' },
   { id: 'clubs', label: 'Клубы' },
   { id: 'players', label: 'Игроки' },
   { id: 'transfers', label: 'Трансферы' },

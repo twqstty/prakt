@@ -26,8 +26,8 @@ function AdminPanel({ clubs, players, apiRequest, reloadData, isAuthenticated })
     }
 
     try {
-      await action()
-      setMessage(successMessage)
+      const actionMessage = await action()
+      setMessage(actionMessage || successMessage)
       await reloadData()
     } catch (requestError) {
       setError(requestError.message)
@@ -91,6 +91,13 @@ function AdminPanel({ clubs, players, apiRequest, reloadData, isAuthenticated })
     runAction(() => apiRequest(`/api/players/${id}`, { method: 'DELETE' }), 'Игрок удален.')
   }
 
+  const importPlayers = () => {
+    runAction(async () => {
+      const result = await apiRequest('/api/import/players', { method: 'POST' })
+      return `Импорт завершен: клубов ${result.clubs}, новых игроков ${result.created}, обновлено ${result.updated}.`
+    }, 'Импорт игроков завершен.')
+  }
+
   return (
     <section className="section admin-page">
       <div className="section-heading">
@@ -103,6 +110,18 @@ function AdminPanel({ clubs, players, apiRequest, reloadData, isAuthenticated })
 
       {message && <div className="alert alert-success">{message}</div>}
       {error && <div className="alert alert-error">{error}</div>}
+
+      <div className="panel import-panel">
+        <div>
+          <h3>Импорт игроков из датасета</h3>
+          <p>
+            Загрузка CSV-данных с реальными клубами, позициями и рыночной стоимостью.
+          </p>
+        </div>
+        <button type="button" onClick={importPlayers}>
+          Импортировать игроков
+        </button>
+      </div>
 
       <div className="admin-grid">
         <form className="panel form-stack" onSubmit={addClub}>
