@@ -1,0 +1,271 @@
+name,age,position,marketValue,club,city
+Erling Haaland,25,ST,180000000,Manchester City,Manchester
+Phil Foden,26,CAM,120000000,Manchester City,Manchester
+Rodri,30,CDM,110000000,Manchester City,Manchester
+Jude Bellingham,23,CM,170000000,Real Madrid,Madrid
+Vinicius Junior,25,LW,160000000,Real Madrid,Madrid
+Kylian Mbappe,27,ST,180000000,Real Madrid,Madrid
+Federico Valverde,27,CM,120000000,Real Madrid,Madrid
+Jamal Musiala,23,CAM,135000000,Bayern Munich,Munich
+Harry Kane,32,ST,95000000,Bayern Munich,Munich
+Florian Wirtz,23,CAM,130000000,Bayern Munich,Munich
+Lautaro Martinez,28,ST,90000000,Inter Milan,Milan
+Nicolo Barella,29,CM,75000000,Inter Milan,Milan
+Alessandro Bastoni,27,CB,70000000,Inter Milan,Milan
+Bukayo Saka,24,RW,140000000,Arsenal,London
+Declan Rice,27,CDM,120000000,Arsenal,London
+Martin Odegaard,27,CAM,110000000,Arsenal,London
+Cole Palmer,24,CAM,120000000,Chelsea,London
+Enzo Fernandez,25,CM,85000000,Chelsea,London
+Moises Caicedo,24,CDM,80000000,Chelsea,London
+Lamine Yamal,18,RW,150000000,Barcelona,Barcelona
+Pedri,23,CM,100000000,Barcelona,Barcelona
+Gavi,21,CM,90000000,Barcelona,Barcelona
+Robert Lewandowski,37,ST,18000000,Barcelona,Barcelona
+Ousmane Dembele,29,RW,90000000,Paris Saint-Germain,Paris
+Achraf Hakimi,27,RB,70000000,Paris Saint-Germain,Paris
+Vitinha,26,CM,80000000,Paris Saint-Germain,Paris
+Khvicha Kvaratskhelia,25,LW,85000000,Napoli,Naples
+Victor Osimhen,27,ST,100000000,Napoli,Naples
+Kevin De Bruyne,35,CM,35000000,Napoli,Naples
+Mohamed Salah,34,RW,55000000,Liverpool,Liverpool
+Trent Alexander-Arnold,27,RB,75000000,Liverpool,Liverpool
+Alexis Mac Allister,27,CM,75000000,Liverpool,Liverpool
+Alisson Becker,33,GK,30000000,Liverpool,Liverpool
+Virgil van Dijk,34,CB,28000000,Liverpool,Liverpool
+Dominik Szoboszlai,25,CAM,70000000,Liverpool,Liverpool
+Luis Diaz,29,LW,65000000,Liverpool,Liverpool
+Darwin Nunez,27,ST,60000000,Liverpool,Liverpool
+Ederson,32,GK,35000000,Manchester City,Manchester
+Ruben Dias,29,CB,80000000,Manchester City,Manchester
+Josko Gvardiol,24,CB,75000000,Manchester City,Manchester
+Jeremy Doku,24,LW,65000000,Manchester City,Manchester
+Savinho,22,RW,55000000,Manchester City,Manchester
+Thibaut Courtois,34,GK,28000000,Real Madrid,Madrid
+Antonio Rudiger,33,CB,25000000,Real Madrid,Madrid
+Eduardo Camavinga,24,CM,95000000,Real Madrid,Madrid
+Aurelien Tchouameni,26,CDM,90000000,Real Madrid,Madrid
+Rodrygo,25,RW,100000000,Real Madrid,Madrid
+Manuel Neuer,40,GK,4000000,Bayern Munich,Munich
+Dayot Upamecano,27,CB,55000000,Bayern Munich,Munich
+Alphonso Davies,25,LB,70000000,Bayern Munich,Munich
+Joshua Kimmich,31,CM,50000000,Bayern Munich,Munich
+Michael Olise,24,RW,65000000,Bayern Munich,Munich
+Yann Sommer,37,GK,5000000,Inter Milan,Milan
+Benjamin Pavard,30,CB,35000000,Inter Milan,Milan
+Hakan Calhanoglu,32,CM,45000000,Inter Milan,Milan
+Marcus Thuram,29,ST,65000000,Inter Milan,Milan
+Federico Dimarco,28,LWB,50000000,Inter Milan,Milan
+David Raya,30,GK,35000000,Arsenal,London
+William Saliba,25,CB,90000000,Arsenal,London
+Gabriel Magalhaes,28,CB,75000000,Arsenal,London
+Kai Havertz,27,CAM,65000000,Arsenal,London
+Gabriel Martinelli,25,LW,70000000,Arsenal,London
+Robert Sanchez,28,GK,25000000,Chelsea,London
+Reece James,26,RB,40000000,Chelsea,London
+Levi Colwill,23,CB,55000000,Chelsea,London
+Christopher Nkunku,28,CAM,55000000,Chelsea,London
+Nicolas Jackson,25,ST,50000000,Chelsea,London
+Marc-Andre ter Stegen,34,GK,18000000,Barcelona,Barcelona
+Pau Cubarsi,19,CB,70000000,Barcelona,Barcelona
+Jules Kounde,27,CB,60000000,Barcelona,Barcelona
+Frenkie de Jong,29,CM,60000000,Barcelona,Barcelona
+Raphinha,29,RW,70000000,Barcelona,Barcelona
+Gianluigi Donnarumma,27,GK,55000000,Paris Saint-Germain,Paris
+Marquinhos,32,CB,35000000,Paris Saint-Germain,Paris
+Nuno Mendes,24,LB,70000000,Paris Saint-Germain,Paris
+Warren Zaire-Emery,20,CM,65000000,Paris Saint-Germain,Paris
+Bradley Barcola,24,LW,70000000,Paris Saint-Germain,Paris
+Alex Meret,29,GK,25000000,Napoli,Naples
+Alessandro Buongiorno,27,CB,45000000,Napoli,Naples
+Stanislav Lobotka,31,CM,35000000,Napoli,Naples
+Scott McTominay,29,CM,40000000,Napoli,Naples
+Romelu Lukaku,33,ST,25000000,Napoli,Naples
+Andre Onana,30,GK,35000000,Manchester United,Manchester
+Leny Yoro,20,CB,55000000,Manchester United,Manchester
+Bruno Fernandes,31,CAM,60000000,Manchester United,Manchester
+Kobbie Mainoo,21,CM,55000000,Manchester United,Manchester
+Rasmus Hojlund,23,ST,65000000,Manchester United,Manchester
+Diogo Costa,26,GK,45000000,Porto,Porto
+Pepe,29,W,25000000,Porto,Porto
+Alan Varela,25,CDM,35000000,Porto,Porto
+Francisco Conceicao,23,RW,40000000,Porto,Porto
+Samu Aghehowa,22,ST,50000000,Porto,Porto
+Gregor Kobel,28,GK,45000000,Borussia Dortmund,Dortmund
+Nico Schlotterbeck,26,CB,45000000,Borussia Dortmund,Dortmund
+Julian Brandt,30,CAM,35000000,Borussia Dortmund,Dortmund
+Karim Adeyemi,24,LW,45000000,Borussia Dortmund,Dortmund
+Serhou Guirassy,30,ST,40000000,Borussia Dortmund,Dortmund
+Mike Maignan,30,GK,35000000,AC Milan,Milan
+Theo Hernandez,28,LB,60000000,AC Milan,Milan
+Rafael Leao,27,LW,85000000,AC Milan,Milan
+Christian Pulisic,27,RW,50000000,AC Milan,Milan
+Santiago Gimenez,25,ST,45000000,AC Milan,Milan
+Guglielmo Vicario,29,GK,35000000,Tottenham Hotspur,London
+Micky van de Ven,25,CB,55000000,Tottenham Hotspur,London
+James Maddison,29,CAM,55000000,Tottenham Hotspur,London
+Dejan Kulusevski,26,RW,55000000,Tottenham Hotspur,London
+Son Heung-min,34,LW,38000000,Tottenham Hotspur,London
+John Stones,32,CB,25000000,Manchester City,Manchester
+Nathan Ake,31,CB,30000000,Manchester City,Manchester
+Bernardo Silva,31,CM,38000000,Manchester City,Manchester
+Mateo Kovacic,32,CM,25000000,Manchester City,Manchester
+Rayan Ait-Nouri,25,LB,45000000,Manchester City,Manchester
+Tijjani Reijnders,27,CM,55000000,Manchester City,Manchester
+James Trafford,23,GK,25000000,Manchester City,Manchester
+Dani Carvajal,34,RB,12000000,Real Madrid,Madrid
+Eder Militao,28,CB,50000000,Real Madrid,Madrid
+Ferland Mendy,31,LB,18000000,Real Madrid,Madrid
+Arda Guler,21,CAM,60000000,Real Madrid,Madrid
+Endrick,20,ST,45000000,Real Madrid,Madrid
+Andriy Lunin,27,GK,18000000,Real Madrid,Madrid
+Min-jae Kim,29,CB,40000000,Bayern Munich,Munich
+Jonathan Tah,30,CB,35000000,Bayern Munich,Munich
+Konrad Laimer,29,CM,28000000,Bayern Munich,Munich
+Leon Goretzka,31,CM,22000000,Bayern Munich,Munich
+Serge Gnabry,30,RW,25000000,Bayern Munich,Munich
+Kingsley Coman,30,LW,30000000,Bayern Munich,Munich
+Aleksandar Pavlovic,22,CDM,50000000,Bayern Munich,Munich
+Denzel Dumfries,30,RB,30000000,Inter Milan,Milan
+Francesco Acerbi,38,CB,3000000,Inter Milan,Milan
+Stefan de Vrij,34,CB,7000000,Inter Milan,Milan
+Piotr Zielinski,32,CM,10000000,Inter Milan,Milan
+Davide Frattesi,26,CM,35000000,Inter Milan,Milan
+Mehdi Taremi,33,ST,5000000,Inter Milan,Milan
+Josep Martinez,28,GK,15000000,Inter Milan,Milan
+Ben White,28,RB,50000000,Arsenal,London
+Jurrien Timber,25,CB,45000000,Arsenal,London
+Riccardo Calafiori,24,LB,45000000,Arsenal,London
+Mikel Merino,30,CM,35000000,Arsenal,London
+Leandro Trossard,31,LW,25000000,Arsenal,London
+Gabriel Jesus,29,ST,30000000,Arsenal,London
+Ethan Nwaneri,19,CAM,55000000,Arsenal,London
+Malo Gusto,23,RB,35000000,Chelsea,London
+Marc Cucurella,27,LB,35000000,Chelsea,London
+Wesley Fofana,25,CB,30000000,Chelsea,London
+Romeo Lavia,22,CDM,35000000,Chelsea,London
+Pedro Neto,26,LW,50000000,Chelsea,London
+Joao Pedro,24,ST,60000000,Chelsea,London
+Estevao Willian,19,RW,50000000,Chelsea,London
+Alejandro Balde,22,LB,60000000,Barcelona,Barcelona
+Ronald Araujo,27,CB,60000000,Barcelona,Barcelona
+Ferran Torres,26,LW,35000000,Barcelona,Barcelona
+Fermin Lopez,23,CM,50000000,Barcelona,Barcelona
+Marc Casado,22,CDM,35000000,Barcelona,Barcelona
+Wojciech Szczesny,36,GK,2000000,Barcelona,Barcelona
+Lucas Hernandez,30,CB,25000000,Paris Saint-Germain,Paris
+Willian Pacho,24,CB,65000000,Paris Saint-Germain,Paris
+Joao Neves,21,CM,80000000,Paris Saint-Germain,Paris
+Fabian Ruiz,30,CM,35000000,Paris Saint-Germain,Paris
+Goncalo Ramos,25,ST,50000000,Paris Saint-Germain,Paris
+Desire Doue,21,CAM,75000000,Paris Saint-Germain,Paris
+Lucas Chevalier,24,GK,40000000,Paris Saint-Germain,Paris
+Giovanni Di Lorenzo,32,RB,12000000,Napoli,Naples
+Amir Rrahmani,32,CB,15000000,Napoli,Naples
+Mathias Olivera,28,LB,25000000,Napoli,Naples
+Andre-Frank Zambo Anguissa,30,CM,25000000,Napoli,Naples
+Matteo Politano,32,RW,10000000,Napoli,Naples
+David Neres,29,LW,25000000,Napoli,Naples
+Giacomo Raspadori,26,ST,25000000,Napoli,Naples
+Ibrahima Konate,27,CB,55000000,Liverpool,Liverpool
+Andrew Robertson,32,LB,20000000,Liverpool,Liverpool
+Ryan Gravenberch,24,CM,65000000,Liverpool,Liverpool
+Curtis Jones,25,CM,35000000,Liverpool,Liverpool
+Cody Gakpo,27,LW,65000000,Liverpool,Liverpool
+Hugo Ekitike,24,ST,55000000,Liverpool,Liverpool
+Giorgi Mamardashvili,25,GK,35000000,Liverpool,Liverpool
+Matthijs de Ligt,26,CB,45000000,Manchester United,Manchester
+Lisandro Martinez,28,CB,40000000,Manchester United,Manchester
+Noussair Mazraoui,28,RB,30000000,Manchester United,Manchester
+Luke Shaw,30,LB,18000000,Manchester United,Manchester
+Manuel Ugarte,25,CDM,50000000,Manchester United,Manchester
+Mason Mount,27,CAM,35000000,Manchester United,Manchester
+Alejandro Garnacho,21,LW,45000000,Manchester United,Manchester
+Amad Diallo,24,RW,35000000,Manchester United,Manchester
+Joshua Zirkzee,25,ST,35000000,Manchester United,Manchester
+Altay Bayindir,28,GK,10000000,Manchester United,Manchester
+Claudio Ramos,34,GK,3000000,Porto,Porto
+Martim Fernandes,20,RB,25000000,Porto,Porto
+Nehuen Perez,26,CB,18000000,Porto,Porto
+Otavio Ataide,24,CB,12000000,Porto,Porto
+Moura,27,LB,10000000,Porto,Porto
+Stephen Eustaquio,29,CM,12000000,Porto,Porto
+Rodrigo Mora,19,CAM,30000000,Porto,Porto
+Ivan Jaime,25,CAM,15000000,Porto,Porto
+Galeno,28,LW,25000000,Porto,Porto
+Danny Namaso,25,ST,12000000,Porto,Porto
+Alexander Meyer,35,GK,2000000,Borussia Dortmund,Dortmund
+Waldemar Anton,29,CB,22000000,Borussia Dortmund,Dortmund
+Ramy Bensebaini,31,LB,10000000,Borussia Dortmund,Dortmund
+Julian Ryerson,28,RB,18000000,Borussia Dortmund,Dortmund
+Emre Can,32,CDM,10000000,Borussia Dortmund,Dortmund
+Marcel Sabitzer,32,CM,12000000,Borussia Dortmund,Dortmund
+Felix Nmecha,25,CM,30000000,Borussia Dortmund,Dortmund
+Jamie Gittens,21,LW,55000000,Borussia Dortmund,Dortmund
+Maximilian Beier,23,ST,30000000,Borussia Dortmund,Dortmund
+Carney Chukwuemeka,22,CAM,25000000,Borussia Dortmund,Dortmund
+Fikayo Tomori,28,CB,25000000,AC Milan,Milan
+Strahinja Pavlovic,25,CB,25000000,AC Milan,Milan
+Matteo Gabbia,26,CB,18000000,AC Milan,Milan
+Youssouf Fofana,27,CDM,30000000,AC Milan,Milan
+Ruben Loftus-Cheek,30,CM,18000000,AC Milan,Milan
+Samuel Chukwueze,27,RW,20000000,AC Milan,Milan
+Yunus Musah,23,CM,25000000,AC Milan,Milan
+Davide Bartesaghi,20,LB,8000000,AC Milan,Milan
+Noah Okafor,26,ST,18000000,AC Milan,Milan
+Luka Jovic,28,ST,10000000,AC Milan,Milan
+Cristian Romero,28,CB,60000000,Tottenham Hotspur,London
+Pedro Porro,26,RB,45000000,Tottenham Hotspur,London
+Destiny Udogie,23,LB,50000000,Tottenham Hotspur,London
+Rodrigo Bentancur,29,CM,30000000,Tottenham Hotspur,London
+Pape Matar Sarr,23,CM,45000000,Tottenham Hotspur,London
+Yves Bissouma,29,CDM,25000000,Tottenham Hotspur,London
+Brennan Johnson,25,RW,45000000,Tottenham Hotspur,London
+Richarlison,29,ST,30000000,Tottenham Hotspur,London
+Wilson Odobert,21,LW,25000000,Tottenham Hotspur,London
+Archie Gray,20,CM,45000000,Tottenham Hotspur,London
+Michele Di Gregorio,28,GK,25000000,Juventus,Turin
+Mattia Perin,33,GK,5000000,Juventus,Turin
+Gleison Bremer,29,CB,50000000,Juventus,Turin
+Federico Gatti,28,CB,25000000,Juventus,Turin
+Andrea Cambiaso,26,LB,40000000,Juventus,Turin
+Pierre Kalulu,26,CB,30000000,Juventus,Turin
+Manuel Locatelli,28,CDM,35000000,Juventus,Turin
+Khephren Thuram,25,CM,45000000,Juventus,Turin
+Teun Koopmeiners,28,CAM,55000000,Juventus,Turin
+Weston McKennie,27,CM,25000000,Juventus,Turin
+Kenan Yildiz,21,LW,80000000,Juventus,Turin
+Dusan Vlahovic,26,ST,55000000,Juventus,Turin
+Jonathan David,26,ST,60000000,Juventus,Turin
+Lois Openda,26,ST,55000000,Juventus,Turin
+Nico Gonzalez,28,RW,35000000,Juventus,Turin
+Jan Oblak,33,GK,25000000,Atletico Madrid,Madrid
+Nahuel Molina,28,RB,30000000,Atletico Madrid,Madrid
+Jose Maria Gimenez,31,CB,25000000,Atletico Madrid,Madrid
+Robin Le Normand,29,CB,35000000,Atletico Madrid,Madrid
+David Hancko,28,CB,35000000,Atletico Madrid,Madrid
+Javi Galan,31,LB,12000000,Atletico Madrid,Madrid
+Marcos Llorente,31,CM,30000000,Atletico Madrid,Madrid
+Koke,34,CM,8000000,Atletico Madrid,Madrid
+Pablo Barrios,23,CM,45000000,Atletico Madrid,Madrid
+Conor Gallagher,26,CM,45000000,Atletico Madrid,Madrid
+Antoine Griezmann,35,SS,15000000,Atletico Madrid,Madrid
+Julian Alvarez,26,ST,90000000,Atletico Madrid,Madrid
+Alexander Sorloth,30,ST,25000000,Atletico Madrid,Madrid
+Giuliano Simeone,23,RW,25000000,Atletico Madrid,Madrid
+Alex Baena,24,CAM,60000000,Atletico Madrid,Madrid
+Peter Gulacsi,36,GK,3000000,RB Leipzig,Leipzig
+Maarten Vandevoordt,24,GK,20000000,RB Leipzig,Leipzig
+Willi Orban,33,CB,8000000,RB Leipzig,Leipzig
+Castello Lukeba,23,CB,50000000,RB Leipzig,Leipzig
+Max Finkgrafe,22,LB,12000000,RB Leipzig,Leipzig
+David Raum,28,LB,30000000,RB Leipzig,Leipzig
+Ridle Baku,28,RB,18000000,RB Leipzig,Leipzig
+Amadou Haidara,28,CM,20000000,RB Leipzig,Leipzig
+Nicolas Seiwald,25,CDM,20000000,RB Leipzig,Leipzig
+Christoph Baumgartner,27,CAM,25000000,RB Leipzig,Leipzig
+Ezechiel Banzuzi,21,CM,20000000,RB Leipzig,Leipzig
+Antonio Nusa,21,LW,35000000,RB Leipzig,Leipzig
+Johan Bakayoko,23,RW,45000000,RB Leipzig,Leipzig
+Yan Diomande,20,LW,25000000,RB Leipzig,Leipzig
+Conrad Harder,21,ST,30000000,RB Leipzig,Leipzig
