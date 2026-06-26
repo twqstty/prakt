@@ -16,10 +16,10 @@ function Header({ activePage, isAuthenticated, user, onNavigate, onLogout }) {
     <header className="site-header">
       <div className="header-inner">
         <button className="brand" type="button" onClick={() => onNavigate('home')}>
-          <span className="brand-mark">FM</span>
+          <span className="brand-mark">ESL</span>
           <span>
-            Football Manager
-            <small>Web league office</small>
+            European Super League
+            <small>League office</small>
           </span>
         </button>
 

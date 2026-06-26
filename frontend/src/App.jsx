@@ -21,6 +21,13 @@ const initialData = {
   leagueTable: [],
 }
 
+class ApiError extends Error {
+  constructor(message, status) {
+    super(message)
+    this.status = status
+  }
+}
+
 function App() {
   const [activePage, setActivePage] = useState('home')
   const [token, setToken] = useState(() => localStorage.getItem('token') || '')
@@ -46,7 +53,7 @@ function App() {
       const result = await response.json().catch(() => ({}))
 
       if (!response.ok) {
-        throw new Error(result.message || 'Ошибка запроса к серверу')
+        throw new ApiError(result.message || 'Ошибка запроса к серверу', response.status)
       }
 
       return result
@@ -77,6 +84,16 @@ function App() {
       setUser(profile)
       setData({ clubs, players, matches, transfers, leagueTable })
     } catch (requestError) {
+      if (requestError.status === 401) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        setToken('')
+        setUser(null)
+        setData(initialData)
+        setActivePage('home')
+        return
+      }
+
       setError(requestError.message)
     } finally {
       setLoading(false)
@@ -121,7 +138,14 @@ function App() {
   )
 
   const pages = {
-    home: <Home clubs={data.clubs} players={data.players} matches={data.matches} />,
+    home: (
+      <Home
+        clubs={data.clubs}
+        players={data.players}
+        matches={data.matches}
+        leagueTable={data.leagueTable}
+      />
+    ),
     auth: <Auth apiUrl={API_URL} onAuthSuccess={handleAuthSuccess} />,
     myClub: <MyClub {...pageProps} />,
     clubs: <Clubs {...pageProps} />,

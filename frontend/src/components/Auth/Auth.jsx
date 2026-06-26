@@ -47,7 +47,7 @@ function Auth({ apiUrl, onAuthSuccess }) {
   return (
     <section className="auth-page">
       <div className="auth-promo">
-        <span className="auth-logo">FM</span>
+        <span className="auth-logo">ESL</span>
         <h1>Операционная система футбольного клуба</h1>
         <p>
           Единая платформа для управления составом, трансферным рынком,

@@ -1,17 +1,18 @@
 import './Home.css'
 
-function Home({ clubs, players, matches }) {
+function Home({ clubs, players, matches, leagueTable = [] }) {
   const stats = [
     { label: 'Клубов', value: clubs.length },
     { label: 'Игроков', value: players.length },
     { label: 'Матчей', value: matches.length },
   ]
+  const topClubs = leagueTable.slice(0, 5)
 
   return (
     <section className="home-page">
       <div className="home-hero">
         <div>
-          <p className="eyebrow">Football Manager Web</p>
+          <p className="eyebrow">European Super League</p>
           <h1>Центр управления футбольной лигой</h1>
           <p>
             Современная web-платформа для клубной аналитики, трансферной
@@ -26,6 +27,44 @@ function Home({ clubs, players, matches }) {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="home-standings">
+        <div className="home-standings-header">
+          <div>
+            <p className="eyebrow">Топ-5</p>
+            <h2>Лидеры лиги</h2>
+          </div>
+          <span>{matches.length} матчей сыграно</span>
+        </div>
+
+        {topClubs.length ? (
+          <div className="home-table-wrap">
+            <table className="home-table">
+              <thead>
+                <tr>
+                  <th>Клуб</th>
+                  <th>Игры</th>
+                  <th>Очки</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topClubs.map((club) => (
+                  <tr key={club.clubId}>
+                    <td>
+                      <span>{club.place}</span>
+                      {club.club}
+                    </td>
+                    <td>{club.games}</td>
+                    <td>{club.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="empty-state">Турнирные данные отсутствуют.</div>
+        )}
       </div>
 
       <div className="home-features">
