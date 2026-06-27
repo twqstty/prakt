@@ -10,6 +10,7 @@ import LeagueTable from './components/LeagueTable/LeagueTable'
 import Auth from './components/Auth/Auth'
 import AdminPanel from './components/AdminPanel/AdminPanel'
 import MyClub from './components/MyClub/MyClub'
+import Season from './components/Season/Season'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001'
 
@@ -19,6 +20,10 @@ const initialData = {
   matches: [],
   transfers: [],
   leagueTable: [],
+  calendar: [],
+  playerStats: [],
+  seasonNews: [],
+  transferWindow: null,
 }
 
 class ApiError extends Error {
@@ -71,18 +76,43 @@ function App() {
     setError('')
 
     try {
-      const [profile, clubs, players, matches, transfers, leagueTable] = await Promise.all([
+      const [
+        profile,
+        clubs,
+        players,
+        matches,
+        transfers,
+        leagueTable,
+        calendar,
+        seasonNews,
+        playerStats,
+        transferWindow,
+      ] = await Promise.all([
         apiRequest('/api/auth/me'),
         apiRequest('/api/clubs'),
         apiRequest('/api/players'),
         apiRequest('/api/matches'),
         apiRequest('/api/transfers'),
         apiRequest('/api/league-table'),
+        apiRequest('/api/season/calendar'),
+        apiRequest('/api/season/news'),
+        apiRequest('/api/season/player-stats'),
+        apiRequest('/api/transfers/window'),
       ])
 
       localStorage.setItem('user', JSON.stringify(profile))
       setUser(profile)
-      setData({ clubs, players, matches, transfers, leagueTable })
+      setData({
+        calendar,
+        clubs,
+        leagueTable,
+        matches,
+        playerStats,
+        players,
+        seasonNews,
+        transfers,
+        transferWindow,
+      })
     } catch (requestError) {
       if (requestError.status === 401) {
         localStorage.removeItem('token')
@@ -152,6 +182,7 @@ function App() {
     players: <Players {...pageProps} />,
     transfers: <Transfers {...pageProps} />,
     matches: <Matches {...pageProps} />,
+    season: <Season {...pageProps} />,
     table: <LeagueTable {...pageProps} />,
     admin: <AdminPanel {...pageProps} />,
   }

@@ -7,7 +7,16 @@ const money = new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0,
 })
 
-function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthenticated, user }) {
+function Transfers({
+  clubs,
+  players,
+  transfers,
+  transferWindow,
+  apiRequest,
+  reloadData,
+  isAuthenticated,
+  user,
+}) {
   const [form, setForm] = useState({ playerId: '', toClubId: user?.clubId || '', price: '' })
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -72,6 +81,12 @@ function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthen
         </div>
       </div>
 
+      {transferWindow && (
+        <div className={transferWindow.isOpen ? 'alert alert-success' : 'alert alert-error'}>
+          {transferWindow.label}. Окна: {transferWindow.windows.join(', ')}.
+        </div>
+      )}
+
       <div className="transfer-layout">
         <form className="panel form-stack" onSubmit={handleSubmit}>
           <label>
@@ -118,7 +133,7 @@ function Transfers({ clubs, players, transfers, apiRequest, reloadData, isAuthen
           )}
           {message && <div className="alert alert-success">{message}</div>}
           {error && <div className="alert alert-error">{error}</div>}
-          <button type="submit" disabled={submitting}>
+          <button type="submit" disabled={submitting || (transferWindow && !transferWindow.isOpen)}>
             {submitting ? 'Оформление...' : 'Купить игрока'}
           </button>
         </form>

@@ -1,0 +1,115 @@
+.season-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 14px;
+  align-items: start;
+}
+
+.season-main,
+.season-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.block-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.block-title h3 {
+  margin: 0;
+}
+
+.block-title span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.calendar-list {
+  display: grid;
+  gap: 10px;
+}
+
+.calendar-round {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-soft);
+  padding: 13px;
+}
+
+.calendar-round.played {
+  border-color: rgba(37, 99, 235, 0.55);
+}
+
+.calendar-round-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-round-top span,
+.news-item span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.calendar-pairs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 12px;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.news-list,
+.leader-list {
+  display: grid;
+  gap: 10px;
+}
+
+.news-item {
+  display: grid;
+  gap: 5px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.news-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.leader-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-soft);
+  padding: 9px 10px;
+}
+
+.leader-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leader-row strong {
+  color: var(--accent-light);
+}
+
+@media (max-width: 900px) {
+  .season-layout,
+  .calendar-pairs {
+    grid-template-columns: 1fr;
+  }
+}

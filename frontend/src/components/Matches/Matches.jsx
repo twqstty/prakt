@@ -2,12 +2,61 @@ import { useMemo, useState } from 'react'
 import './Matches.css'
 
 const eventLabels = {
+  ASSIST: 'Ассист',
   GOAL: 'Гол',
+  INJURY: 'Травма',
   RED_CARD: 'Красная карточка',
   YELLOW_CARD: 'Желтая карточка',
 }
 
-function Matches({ clubs, matches, apiRequest, reloadData }) {
+function playersForClub(players, clubId) {
+  return players
+    .filter((player) => player.clubId === Number(clubId))
+    .sort((firstPlayer, secondPlayer) => secondPlayer.rating - firstPlayer.rating)
+}
+
+function isUnavailable(player) {
+  const now = new Date()
+  return (
+    (player.injuredUntil && new Date(player.injuredUntil) >= now) ||
+    (player.suspendedUntil && new Date(player.suspendedUntil) >= now)
+  )
+}
+
+function LineupSelector({ lineupIds, onToggle, players, title }) {
+  if (!players.length) return null
+
+  return (
+    <div className="panel lineup-selector">
+      <div className="lineup-selector-top">
+        <h3>{title}</h3>
+        <span>{lineupIds.length}/11</span>
+      </div>
+      <div className="lineup-list">
+        {players.map((player) => {
+          const unavailable = isUnavailable(player)
+          return (
+            <button
+              className={lineupIds.includes(player.id) ? 'lineup-player active' : 'lineup-player'}
+              disabled={unavailable}
+              key={player.id}
+              type="button"
+              onClick={() => onToggle(player.id)}
+            >
+              <span>{player.name}</span>
+              <small>
+                {player.position} · {player.rating}
+                {unavailable ? ' · недоступен' : ''}
+              </small>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function Matches({ clubs, matches, players, apiRequest, reloadData }) {
   const [form, setForm] = useState({
     awayClubId: '',
     homeClubId: '',
@@ -15,6 +64,8 @@ function Matches({ clubs, matches, apiRequest, reloadData }) {
   })
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [awayLineupIds, setAwayLineupIds] = useState([])
+  const [homeLineupIds, setHomeLineupIds] = useState([])
   const [roundSimulating, setRoundSimulating] = useState(false)
   const [simulating, setSimulating] = useState(false)
   const [selectedRoundKey, setSelectedRoundKey] = useState('')
@@ -50,6 +101,17 @@ function Matches({ clubs, matches, apiRequest, reloadData }) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }))
   }
 
+  const homePlayers = playersForClub(players, form.homeClubId)
+  const awayPlayers = playersForClub(players, form.awayClubId)
+
+  function toggleLineupPlayer(playerId, lineupIds, setLineupIds) {
+    setLineupIds((current) => {
+      if (current.includes(playerId)) return current.filter((id) => id !== playerId)
+      if (current.length >= 11) return current
+      return [...current, playerId]
+    })
+  }
+
   const simulateMatch = async (event) => {
     event.preventDefault()
     setMessage('')
@@ -66,7 +128,9 @@ function Matches({ clubs, matches, apiRequest, reloadData }) {
         method: 'POST',
         body: JSON.stringify({
           awayClubId: Number(form.awayClubId),
+          awayLineupIds,
           homeClubId: Number(form.homeClubId),
+          homeLineupIds,
           matchDate: form.matchDate,
         }),
       })
@@ -147,6 +211,23 @@ function Matches({ clubs, matches, apiRequest, reloadData }) {
           {roundSimulating ? 'Симуляция тура...' : 'Симулировать тур'}
         </button>
       </form>
+      
+      {(homePlayers.length || awayPlayers.length) && (
+        <div className="lineup-panel">
+          <LineupSelector
+            lineupIds={homeLineupIds}
+            players={homePlayers}
+            title="Состав хозяев"
+            onToggle={(playerId) => toggleLineupPlayer(playerId, homeLineupIds, setHomeLineupIds)}
+          />
+          <LineupSelector
+            lineupIds={awayLineupIds}
+            players={awayPlayers}
+            title="Состав гостей"
+            onToggle={(playerId) => toggleLineupPlayer(playerId, awayLineupIds, setAwayLineupIds)}
+          />
+        </div>
+      )}
 
       {message && <div className="alert alert-success">{message}</div>}
       {error && <div className="alert alert-error">{error}</div>}

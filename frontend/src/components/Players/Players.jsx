@@ -7,6 +7,32 @@ const money = new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0,
 })
 
+function statusLabel(player) {
+  const now = new Date()
+  if (player.injuredUntil && new Date(player.injuredUntil) >= now) return 'Травма'
+  if (player.suspendedUntil && new Date(player.suspendedUntil) >= now) return 'Дискв.'
+  return 'Готов'
+}
+
+const statSorts = {
+  appearances: 'Матчи',
+  assists: 'А',
+  goals: 'Г',
+  redCards: 'КК',
+  yellowCards: 'ЖК',
+}
+
+function SortButton({ active, direction, label, onClick }) {
+  const marker = active ? (direction === 'desc' ? '↓' : '↑') : ''
+
+  return (
+    <button className={active ? 'sort-header active' : 'sort-header'} type="button" onClick={onClick}>
+      {label}
+      {marker && <span>{marker}</span>}
+    </button>
+  )
+}
+
 function Players({ players }) {
   const [filters, setFilters] = useState({
     ageMax: '',
@@ -19,6 +45,7 @@ function Players({ players }) {
     ratingMax: '',
     ratingMin: '',
   })
+  const [sort, setSort] = useState({ direction: null, field: null })
 
   const positions = useMemo(
     () => [...new Set(players.map((player) => player.position).filter(Boolean))].sort(),
@@ -30,9 +57,8 @@ function Players({ players }) {
     [players],
   )
 
-  const filteredPlayers = useMemo(
-    () =>
-      players.filter((player) => {
+  const filteredPlayers = useMemo(() => {
+    const result = players.filter((player) => {
         const clubName = player.club?.name || 'Свободный агент'
         const normalizedName = player.name.toLowerCase()
 
@@ -47,9 +73,19 @@ function Players({ players }) {
           (!filters.priceMin || player.price >= Number(filters.priceMin)) &&
           (!filters.priceMax || player.price <= Number(filters.priceMax))
         )
-      }),
-    [filters, players],
-  )
+      })
+
+    if (!sort.field || !sort.direction) return result
+
+    return [...result].sort((firstPlayer, secondPlayer) => {
+      const firstValue = firstPlayer[sort.field] || 0
+      const secondValue = secondPlayer[sort.field] || 0
+      const diff = firstValue - secondValue
+
+      if (diff === 0) return firstPlayer.name.localeCompare(secondPlayer.name)
+      return sort.direction === 'asc' ? diff : -diff
+    })
+  }, [filters, players, sort])
 
   const updateFilter = (event) => {
     setFilters((current) => ({ ...current, [event.target.name]: event.target.value }))
@@ -66,6 +102,14 @@ function Players({ players }) {
       priceMin: '',
       ratingMax: '',
       ratingMin: '',
+    })
+  }
+
+  const toggleSort = (field) => {
+    setSort((current) => {
+      if (current.field !== field) return { direction: 'desc', field }
+      if (current.direction === 'desc') return { direction: 'asc', field }
+      return { direction: null, field: null }
     })
   }
 
@@ -183,6 +227,17 @@ function Players({ players }) {
                     <th>Позиция</th>
                     <th>Рейтинг</th>
                     <th>Цена</th>
+                    {Object.entries(statSorts).map(([field, label]) => (
+                      <th key={field}>
+                        <SortButton
+                          active={sort.field === field}
+                          direction={sort.direction}
+                          label={label}
+                          onClick={() => toggleSort(field)}
+                        />
+                      </th>
+                    ))}
+                    <th>Статус</th>
                     <th>Клуб</th>
                   </tr>
                 </thead>
@@ -196,6 +251,16 @@ function Players({ players }) {
                       </td>
                       <td>{player.rating}</td>
                       <td>{money.format(player.price)}</td>
+                      <td>{player.appearances || 0}</td>
+                      <td>{player.goals || 0}</td>
+                      <td>{player.assists || 0}</td>
+                      <td>{player.yellowCards || 0}</td>
+                      <td>{player.redCards || 0}</td>
+                      <td>
+                        <span className={`status-pill ${statusLabel(player) === 'Готов' ? 'ready' : 'blocked'}`}>
+                          {statusLabel(player)}
+                        </span>
+                      </td>
                       <td>{player.club?.name || 'Свободный агент'}</td>
                     </tr>
                   ))}

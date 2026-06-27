@@ -7,6 +7,7 @@ const navItems = [
   { id: 'players', label: 'Игроки' },
   { id: 'transfers', label: 'Трансферы' },
   { id: 'matches', label: 'Матчи' },
+  { id: 'season', label: 'Сезон' },
   { id: 'table', label: 'Таблица' },
   { id: 'admin', label: 'Админ' },
 ]
