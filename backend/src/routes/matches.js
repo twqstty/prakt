@@ -13,8 +13,8 @@ function averagePlayerRating(players) {
   return players.reduce((sum, player) => sum + player.rating, 0) / players.length
 }
 
-function calculateTeamPower(club, homeBonus = 0) {
-  const squadRating = averagePlayerRating(club.players)
+function calculateTeamPower(club, lineup, homeBonus = 0) {
+  const squadRating = averagePlayerRating(lineup)
   return club.rating * 0.4 + squadRating * 0.6 + homeBonus + randomBetween(-8, 8)
 }
 
@@ -50,6 +50,26 @@ function pickPlayer(players, preferredPositions = []) {
   return pool[Math.floor(Math.random() * pool.length)]
 }
 
+function isPlayerUnavailable(player, matchDate) {
+  const date = new Date(matchDate)
+  return (
+    (player.injuredUntil && new Date(player.injuredUntil) >= date) ||
+    (player.suspendedUntil && new Date(player.suspendedUntil) >= date)
+  )
+}
+
+function selectLineup(club, lineupIds = [], matchDate) {
+  const requestedIds = new Set(lineupIds.map(Number))
+  const requestedPlayers = club.players.filter((player) => requestedIds.has(player.id))
+  const sourcePlayers = requestedPlayers.length >= 11 ? requestedPlayers : club.players
+  const availablePlayers = sourcePlayers.filter((player) => !isPlayerUnavailable(player, matchDate))
+  const fallbackPlayers = sourcePlayers.length ? sourcePlayers : club.players
+
+  return (availablePlayers.length ? availablePlayers : fallbackPlayers)
+    .sort((firstPlayer, secondPlayer) => secondPlayer.rating - firstPlayer.rating)
+    .slice(0, 11)
+}
+
 function uniqueMinute(usedMinutes) {
   let minute = Math.floor(randomBetween(2, 91))
   while (usedMinutes.has(minute)) minute = Math.floor(randomBetween(2, 91))
@@ -61,13 +81,28 @@ function createGoalEvents(club, goals, usedMinutes) {
   const events = []
   for (let index = 0; index < goals; index += 1) {
     const scorer = pickPlayer(club.players, ['ST', 'LW', 'RW', 'CAM', 'CM'])
+    const assisterPool = club.players.filter((player) => player.id !== scorer?.id)
+    const assister = assisterPool.length ? pickPlayer(assisterPool, ['LW', 'RW', 'CAM', 'CM', 'ST']) : null
+    const minute = uniqueMinute(usedMinutes)
     events.push({
       clubName: club.name,
       detail: 'Гол',
-      minute: uniqueMinute(usedMinutes),
+      minute,
+      playerId: scorer?.id,
       player: scorer?.name || 'Unknown player',
       type: 'GOAL',
     })
+
+    if (assister && Math.random() < 0.72) {
+      events.push({
+        clubName: club.name,
+        detail: 'Голевая передача',
+        minute,
+        playerId: assister.id,
+        player: assister.name,
+        type: 'ASSIST',
+      })
+    }
   }
   return events
 }
@@ -83,6 +118,7 @@ function createCardEvents(club, usedMinutes) {
       clubName: club.name,
       detail: 'Желтая карточка',
       minute: uniqueMinute(usedMinutes),
+      playerId: player?.id,
       player: player?.name || 'Unknown player',
       type: 'YELLOW_CARD',
     })
@@ -94,12 +130,29 @@ function createCardEvents(club, usedMinutes) {
       clubName: club.name,
       detail: 'Красная карточка',
       minute: uniqueMinute(usedMinutes),
+      playerId: player?.id,
       player: player?.name || 'Unknown player',
       type: 'RED_CARD',
     })
   }
 
   return events
+}
+
+function createInjuryEvents(club, usedMinutes) {
+  if (Math.random() > 0.16) return []
+  const player = pickPlayer(club.players)
+
+  return [
+    {
+      clubName: club.name,
+      detail: 'Травма',
+      minute: uniqueMinute(usedMinutes),
+      playerId: player?.id,
+      player: player?.name || 'Unknown player',
+      type: 'INJURY',
+    },
+  ]
 }
 
 function roundXg(value) {
@@ -115,9 +168,13 @@ async function getNextRoundNumber(client) {
   return (latestRound?.number || 0) + 1
 }
 
-function createSimulationData(homeClub, awayClub, matchDate, round = 0, roundId = null) {
-  const homePower = calculateTeamPower(homeClub, 3)
-  const awayPower = calculateTeamPower(awayClub)
+function createSimulationData(homeClub, awayClub, matchDate, round = 0, roundId = null, lineups = {}) {
+  const homeLineup = lineups.homeLineup || selectLineup(homeClub, [], matchDate)
+  const awayLineup = lineups.awayLineup || selectLineup(awayClub, [], matchDate)
+  const simulatedHomeClub = { ...homeClub, players: homeLineup }
+  const simulatedAwayClub = { ...awayClub, players: awayLineup }
+  const homePower = calculateTeamPower(homeClub, homeLineup, 3)
+  const awayPower = calculateTeamPower(awayClub, awayLineup)
   const homeXg = calculateXg(homePower, awayPower)
   const awayXg = calculateXg(awayPower, homePower)
   const homeScore = generateGoals(homePower, awayPower)
@@ -126,10 +183,12 @@ function createSimulationData(homeClub, awayClub, matchDate, round = 0, roundId 
   const awayShotStats = generateShots(awayXg, awayScore)
   const usedMinutes = new Set()
   const events = [
-    ...createGoalEvents(homeClub, homeScore, usedMinutes),
-    ...createGoalEvents(awayClub, awayScore, usedMinutes),
-    ...createCardEvents(homeClub, usedMinutes),
-    ...createCardEvents(awayClub, usedMinutes),
+    ...createGoalEvents(simulatedHomeClub, homeScore, usedMinutes),
+    ...createGoalEvents(simulatedAwayClub, awayScore, usedMinutes),
+    ...createCardEvents(simulatedHomeClub, usedMinutes),
+    ...createCardEvents(simulatedAwayClub, usedMinutes),
+    ...createInjuryEvents(simulatedHomeClub, usedMinutes),
+    ...createInjuryEvents(simulatedAwayClub, usedMinutes),
   ].sort((a, b) => a.minute - b.minute)
 
   return {
@@ -153,13 +212,70 @@ function createSimulationData(homeClub, awayClub, matchDate, round = 0, roundId 
     },
     simulation: {
       awayPower: Math.round(awayPower * 10) / 10,
+      awayLineupIds: awayLineup.map((player) => player.id),
       homePower: Math.round(homePower * 10) / 10,
+      homeLineupIds: homeLineup.map((player) => player.id),
     },
   }
 }
 
-async function createSimulatedMatch(client, homeClub, awayClub, matchDate, round = 0, roundId = null) {
-  const simulationData = createSimulationData(homeClub, awayClub, matchDate, round, roundId)
+async function updatePlayerStats(client, simulation, events, matchDate) {
+  const appearanceIds = [...new Set([...simulation.homeLineupIds, ...simulation.awayLineupIds])]
+  const eventStatMap = {
+    ASSIST: 'assists',
+    GOAL: 'goals',
+    RED_CARD: 'redCards',
+    YELLOW_CARD: 'yellowCards',
+  }
+
+  for (const playerId of appearanceIds) {
+    await client.player.update({
+      where: { id: playerId },
+      data: { appearances: { increment: 1 } },
+    })
+  }
+
+  for (const event of events) {
+    if (!event.playerId) continue
+
+    const statField = eventStatMap[event.type]
+    if (statField) {
+      await client.player.update({
+        where: { id: event.playerId },
+        data: { [statField]: { increment: 1 } },
+      })
+    }
+
+    if (event.type === 'RED_CARD') {
+      const suspendedUntil = new Date(matchDate)
+      suspendedUntil.setDate(suspendedUntil.getDate() + 7)
+      await client.player.update({
+        where: { id: event.playerId },
+        data: { suspendedUntil },
+      })
+    }
+
+    if (event.type === 'INJURY') {
+      const injuredUntil = new Date(matchDate)
+      injuredUntil.setDate(injuredUntil.getDate() + Math.floor(randomBetween(7, 29)))
+      await client.player.update({
+        where: { id: event.playerId },
+        data: { injuredUntil },
+      })
+    }
+  }
+}
+
+async function createSimulatedMatch(
+  client,
+  homeClub,
+  awayClub,
+  matchDate,
+  round = 0,
+  roundId = null,
+  lineups = {},
+) {
+  const simulationData = createSimulationData(homeClub, awayClub, matchDate, round, roundId, lineups)
   const match = await client.match.create({
     data: simulationData.data,
     include: {
@@ -171,6 +287,8 @@ async function createSimulatedMatch(client, homeClub, awayClub, matchDate, round
       },
     },
   })
+
+  await updatePlayerStats(client, simulationData.simulation, simulationData.data.events.create, matchDate)
 
   return {
     ...match,
@@ -199,7 +317,7 @@ router.get('/', async (req, res) => {
 
 router.post('/simulate', authMiddleware, async (req, res) => {
   try {
-    const { homeClubId, awayClubId, matchDate } = req.body
+    const { homeClubId, awayClubId, matchDate, homeLineupIds = [], awayLineupIds = [] } = req.body
 
     if (!homeClubId || !awayClubId || !matchDate) {
       return res.status(400).json({ message: 'Заполните клубы и дату матча' })
@@ -224,7 +342,12 @@ router.post('/simulate', authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'Один из клубов не найден' })
     }
 
-    const match = await createSimulatedMatch(prisma, homeClub, awayClub, matchDate)
+    const homeLineup = selectLineup(homeClub, homeLineupIds, matchDate)
+    const awayLineup = selectLineup(awayClub, awayLineupIds, matchDate)
+    const match = await createSimulatedMatch(prisma, homeClub, awayClub, matchDate, 0, null, {
+      awayLineup,
+      homeLineup,
+    })
 
     res.status(201).json(match)
   } catch (error) {

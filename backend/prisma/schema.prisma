@@ -32,15 +32,22 @@ model Club {
 }
 
 model Player {
-  id        Int        @id @default(autoincrement())
-  name      String
-  age       Int
-  position  String
-  rating    Int
-  price     Int
-  clubId    Int?
-  club      Club?      @relation(fields: [clubId], references: [id], onDelete: SetNull)
-  transfers Transfer[]
+  id             Int        @id @default(autoincrement())
+  name           String
+  age            Int
+  position       String
+  rating         Int
+  price          Int
+  clubId         Int?
+  appearances    Int        @default(0)
+  goals          Int        @default(0)
+  assists        Int        @default(0)
+  yellowCards    Int        @default(0)
+  redCards       Int        @default(0)
+  injuredUntil   DateTime?
+  suspendedUntil DateTime?
+  club           Club?      @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  transfers      Transfer[]
 }
 
 model Match {
@@ -75,6 +82,7 @@ model MatchRound {
 model MatchEvent {
   id       Int    @id @default(autoincrement())
   matchId  Int
+  playerId Int?
   minute   Int
   type     String
   clubName String

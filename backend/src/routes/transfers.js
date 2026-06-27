@@ -4,6 +4,21 @@ import { authMiddleware } from '../middleware/auth.js'
 
 const router = Router()
 
+function getTransferWindowStatus(date = new Date()) {
+  const month = date.getMonth()
+  const isOpen = month === 0 || month === 5 || month === 6 || month === 7
+
+  return {
+    isOpen,
+    label: isOpen ? 'Трансферное окно открыто' : 'Трансферное окно закрыто',
+    windows: ['Январь', 'Июнь - Август'],
+  }
+}
+
+router.get('/window', (req, res) => {
+  res.json(getTransferWindowStatus())
+})
+
 router.get('/', async (req, res) => {
   const transfers = await prisma.transfer.findMany({
     include: {
@@ -19,6 +34,11 @@ router.get('/', async (req, res) => {
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { playerId, toClubId, price } = req.body
+    const windowStatus = getTransferWindowStatus()
+
+    if (!windowStatus.isOpen) {
+      return res.status(400).json({ message: 'Трансферы доступны только в январе и с июня по август' })
+    }
 
     if (!playerId || !toClubId || price === undefined) {
       return res.status(400).json({ message: 'Заполните playerId, toClubId и price' })
