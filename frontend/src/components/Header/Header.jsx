@@ -1,4 +1,5 @@
 import './Header.css'
+import headerStadium from '../../assets/header-stadium.png'
 
 const navItems = [
   { id: 'home', label: 'Главная' },
@@ -13,11 +14,14 @@ const navItems = [
 ]
 
 function Header({ activePage, isAuthenticated, user, onNavigate, onLogout }) {
+  const visibleNavItems = navItems.filter((item) => item.id !== 'admin' || user?.role === 'ADMIN')
+
   return (
     <header className="site-header">
       <div className="header-inner">
         <button className="brand" type="button" onClick={() => onNavigate('home')}>
           <span className="brand-mark">ESL</span>
+          <img className="brand-photo" src={headerStadium} alt="" />
           <span>
             European Super League
             <small>League office</small>
@@ -25,7 +29,7 @@ function Header({ activePage, isAuthenticated, user, onNavigate, onLogout }) {
         </button>
 
         <nav className="nav-list" aria-label="Основная навигация">
-          {navItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <button
               className={activePage === item.id ? 'nav-link active' : 'nav-link'}
               key={item.id}

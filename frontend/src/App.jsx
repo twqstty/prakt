@@ -43,6 +43,7 @@ function App() {
   const [data, setData] = useState(initialData)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const isAdmin = user?.role === 'ADMIN'
 
   const apiRequest = useCallback(
     async (path, options = {}) => {
@@ -184,8 +185,9 @@ function App() {
     matches: <Matches {...pageProps} />,
     season: <Season {...pageProps} />,
     table: <LeagueTable {...pageProps} />,
-    admin: <AdminPanel {...pageProps} />,
+    admin: isAdmin ? <AdminPanel {...pageProps} /> : <Home {...pageProps} />,
   }
+  const currentPage = activePage === 'admin' && !isAdmin ? 'home' : activePage
 
   if (!token) {
     return (
@@ -198,8 +200,9 @@ function App() {
   return (
     <div className="app-shell">
       <Header
-        activePage={activePage}
+        activePage={currentPage}
         isAuthenticated={Boolean(token)}
+        isAdmin={isAdmin}
         user={user}
         onNavigate={setActivePage}
         onLogout={handleLogout}
@@ -215,7 +218,7 @@ function App() {
           </div>
         )}
         {loading && <div className="loading-line">Загружаем футбольные данные...</div>}
-        {pages[activePage]}
+        {pages[currentPage]}
       </main>
     </div>
   )

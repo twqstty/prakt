@@ -42,6 +42,14 @@
   font-weight: 900;
 }
 
+.brand-photo {
+  width: 82px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 .brand small {
   display: block;
   color: var(--muted);
@@ -98,5 +106,11 @@
 
   .auth-actions {
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 520px) {
+  .brand-photo {
+    width: 64px;
   }
 }
