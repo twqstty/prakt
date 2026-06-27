@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import prisma from '../lib/prisma.js'
-import { authMiddleware } from '../middleware/auth.js'
+import { adminMiddleware, authMiddleware } from '../middleware/auth.js'
 
 const router = Router()
 
@@ -159,8 +159,9 @@ function roundXg(value) {
   return Math.round(value * 100) / 100
 }
 
-async function getNextRoundNumber(client) {
+async function getNextRoundNumber(client, userId) {
   const latestRound = await client.matchRound.findFirst({
+    where: { userId },
     orderBy: { number: 'desc' },
     select: { number: true },
   })
@@ -168,7 +169,15 @@ async function getNextRoundNumber(client) {
   return (latestRound?.number || 0) + 1
 }
 
-function createSimulationData(homeClub, awayClub, matchDate, round = 0, roundId = null, lineups = {}) {
+function createSimulationData(
+  homeClub,
+  awayClub,
+  matchDate,
+  round = 0,
+  roundId = null,
+  userId = null,
+  lineups = {},
+) {
   const homeLineup = lineups.homeLineup || selectLineup(homeClub, [], matchDate)
   const awayLineup = lineups.awayLineup || selectLineup(awayClub, [], matchDate)
   const simulatedHomeClub = { ...homeClub, players: homeLineup }
@@ -205,6 +214,7 @@ function createSimulationData(homeClub, awayClub, matchDate, round = 0, roundId 
       awayXg: roundXg(awayXg),
       round,
       roundId,
+      userId,
       matchDate: new Date(matchDate),
       events: {
         create: events,
@@ -273,9 +283,18 @@ async function createSimulatedMatch(
   matchDate,
   round = 0,
   roundId = null,
+  userId = null,
   lineups = {},
 ) {
-  const simulationData = createSimulationData(homeClub, awayClub, matchDate, round, roundId, lineups)
+  const simulationData = createSimulationData(
+    homeClub,
+    awayClub,
+    matchDate,
+    round,
+    roundId,
+    userId,
+    lineups,
+  )
   const match = await client.match.create({
     data: simulationData.data,
     include: {
@@ -300,8 +319,9 @@ function shuffleClubs(clubs) {
   return [...clubs].sort(() => Math.random() - 0.5)
 }
 
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   const matches = await prisma.match.findMany({
+    where: { userId: req.user.id },
     include: {
       homeClub: true,
       awayClub: true,
@@ -344,7 +364,7 @@ router.post('/simulate', authMiddleware, async (req, res) => {
 
     const homeLineup = selectLineup(homeClub, homeLineupIds, matchDate)
     const awayLineup = selectLineup(awayClub, awayLineupIds, matchDate)
-    const match = await createSimulatedMatch(prisma, homeClub, awayClub, matchDate, 0, null, {
+    const match = await createSimulatedMatch(prisma, homeClub, awayClub, matchDate, 0, null, req.user.id, {
       awayLineup,
       homeLineup,
     })
@@ -393,7 +413,8 @@ router.post('/simulate-round', authMiddleware, async (req, res) => {
       const round = await tx.matchRound.create({
         data: {
           matchDate: new Date(matchDate),
-          number: await getNextRoundNumber(tx),
+          number: await getNextRoundNumber(tx, req.user.id),
+          userId: req.user.id,
         },
       })
       const createdMatches = []
@@ -405,6 +426,7 @@ router.post('/simulate-round', authMiddleware, async (req, res) => {
           matchDate,
           round.number,
           round.id,
+          req.user.id,
         )
         createdMatches.push(match)
       }
@@ -420,7 +442,7 @@ router.post('/simulate-round', authMiddleware, async (req, res) => {
   }
 })
 
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { homeClubId, awayClubId, homeScore, awayScore, matchDate } = req.body
 
@@ -439,6 +461,7 @@ router.post('/', authMiddleware, async (req, res) => {
         homeScore: Number(homeScore),
         awayScore: Number(awayScore),
         round: 0,
+        userId: req.user.id,
         matchDate: new Date(matchDate),
       },
       include: {

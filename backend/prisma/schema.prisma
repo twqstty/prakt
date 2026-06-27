@@ -8,13 +8,15 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String
-  email    String @unique
-  password String
-  role     String @default("USER")
-  clubId   Int?
-  club     Club?  @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  id          Int          @id @default(autoincrement())
+  username    String
+  email       String       @unique
+  password    String
+  role        String       @default("USER")
+  clubId      Int?
+  club        Club?        @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  matches     Match[]
+  matchRounds MatchRound[]
 }
 
 model Club {
@@ -64,19 +66,25 @@ model Match {
   awayXg            Float        @default(0)
   round             Int          @default(0)
   roundId           Int?
+  userId            Int?
   matchDate         DateTime
   homeClub          Club         @relation("HomeClub", fields: [homeClubId], references: [id], onDelete: Cascade)
   awayClub          Club         @relation("AwayClub", fields: [awayClubId], references: [id], onDelete: Cascade)
   matchRound        MatchRound?  @relation(fields: [roundId], references: [id], onDelete: SetNull)
+  user              User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
   events            MatchEvent[]
 }
 
 model MatchRound {
   id        Int      @id @default(autoincrement())
-  number    Int      @unique
+  number    Int
+  userId    Int?
   matchDate DateTime
   createdAt DateTime @default(now())
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   matches   Match[]
+
+  @@unique([userId, number])
 }
 
 model MatchEvent {

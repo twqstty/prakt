@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import prisma from '../lib/prisma.js'
+import { authMiddleware } from '../middleware/auth.js'
 
 const router = Router()
 
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   const clubs = await prisma.club.findMany()
-  const matches = await prisma.match.findMany()
+  const matches = await prisma.match.findMany({ where: { userId: req.user.id } })
 
   const table = new Map(
     clubs.map((club) => [

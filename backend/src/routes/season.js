@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import prisma from '../lib/prisma.js'
+import { authMiddleware } from '../middleware/auth.js'
 
 const router = Router()
 
@@ -38,10 +39,48 @@ function resultLabel(match) {
   return `${match.homeClub.name} и ${match.awayClub.name} сыграли вничью`
 }
 
-router.get('/calendar', async (req, res) => {
+function applyUserStats(players, events) {
+  const stats = new Map()
+
+  for (const event of events) {
+    if (!event.playerId) continue
+    if (!stats.has(event.playerId)) {
+      stats.set(event.playerId, {
+        appearances: new Set(),
+        assists: 0,
+        goals: 0,
+        redCards: 0,
+        yellowCards: 0,
+      })
+    }
+
+    const playerStats = stats.get(event.playerId)
+    playerStats.appearances.add(event.matchId)
+
+    if (event.type === 'ASSIST') playerStats.assists += 1
+    if (event.type === 'GOAL') playerStats.goals += 1
+    if (event.type === 'RED_CARD') playerStats.redCards += 1
+    if (event.type === 'YELLOW_CARD') playerStats.yellowCards += 1
+  }
+
+  return players.map((player) => {
+    const playerStats = stats.get(player.id)
+    return {
+      ...player,
+      appearances: playerStats?.appearances.size || 0,
+      assists: playerStats?.assists || 0,
+      goals: playerStats?.goals || 0,
+      redCards: playerStats?.redCards || 0,
+      yellowCards: playerStats?.yellowCards || 0,
+    }
+  })
+}
+
+router.get('/calendar', authMiddleware, async (req, res) => {
   const [clubs, matchRounds] = await Promise.all([
     prisma.club.findMany({ orderBy: { name: 'asc' } }),
     prisma.matchRound.findMany({
+      where: { userId: req.user.id },
       include: { matches: true },
       orderBy: { number: 'asc' },
     }),
@@ -61,9 +100,10 @@ router.get('/calendar', async (req, res) => {
   res.json(calendar)
 })
 
-router.get('/news', async (req, res) => {
+router.get('/news', authMiddleware, async (req, res) => {
   const [matches, transfers] = await Promise.all([
     prisma.match.findMany({
+      where: { userId: req.user.id },
       include: {
         awayClub: true,
         events: true,
@@ -105,14 +145,36 @@ router.get('/news', async (req, res) => {
   res.json([...matchNews, ...transferNews].slice(0, 14))
 })
 
-router.get('/player-stats', async (req, res) => {
-  const players = await prisma.player.findMany({
-    include: { club: true },
-    orderBy: [{ goals: 'desc' }, { assists: 'desc' }, { rating: 'desc' }],
-    take: 50,
-  })
+router.get('/player-stats', authMiddleware, async (req, res) => {
+  const [players, events] = await Promise.all([
+    prisma.player.findMany({
+      include: { club: true },
+      orderBy: [{ rating: 'desc' }, { price: 'desc' }],
+    }),
+    prisma.matchEvent.findMany({
+      where: {
+        playerId: { not: null },
+        match: { userId: req.user.id },
+      },
+      select: {
+        matchId: true,
+        playerId: true,
+        type: true,
+      },
+    }),
+  ])
 
-  res.json(players)
+  const playerStats = applyUserStats(players, events)
+    .sort((firstPlayer, secondPlayer) => {
+      const goalsDiff = secondPlayer.goals - firstPlayer.goals
+      if (goalsDiff) return goalsDiff
+      const assistsDiff = secondPlayer.assists - firstPlayer.assists
+      if (assistsDiff) return assistsDiff
+      return secondPlayer.rating - firstPlayer.rating
+    })
+    .slice(0, 50)
+
+  res.json(playerStats)
 })
 
 export default router

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import prisma from '../lib/prisma.js'
-import { authMiddleware } from '../middleware/auth.js'
+import { adminMiddleware, authMiddleware } from '../middleware/auth.js'
 
 const router = Router()
 
@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
   res.json(clubs)
 })
 
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { name, city, budget, rating } = req.body
 
@@ -32,7 +32,7 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 })
 
-router.delete('/:id', authMiddleware, async (req, res) => {
+router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     await prisma.club.delete({ where: { id: Number(req.params.id) } })
     res.json({ message: 'Клуб удален' })
